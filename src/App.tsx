@@ -1,45 +1,96 @@
-// import { useState } from "react";
-import "./App.css";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 function App() {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [dictionaryData, setDictionaryData] = useState<any[]>([
+    {
+      word: "Dictionary",
+      phonetic: "",
+      sourceUrls: [""],
+      meanings: ""
+    }
+  ]);
+
+  const handleInput = function (event: React.ChangeEvent<HTMLInputElement>) {
+    setSearchQuery(event.target.value);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const respo = await fetch(
+          `https://api.dictionaryapi.dev/api/v2/entries/en/${searchQuery}`
+        );
+        const data = await respo.json();
+
+        if (!respo.ok) throw new Error("something went wrong");
+
+        setDictionaryData(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (searchQuery.length > 2) {
+      fetchData();
+    }
+  }, [searchQuery]);
+  console.log(dictionaryData)
+
   return (
     <Container>
       <Header>
-        <img src="/images/logo.svg" alt="" />
+        <img src="/images/logo.svg" alt="logo" />
         <div className="rightHeader">
           <span className="fonts">Serif</span>
-          <img src="/images/icon-arrow-down.svg" alt="" />
+          <img src="/images/icon-arrow-down.svg" alt="arrow" />
           <div className="line"></div>
-          <img src="/images/icon-moon.svg" alt="" />
+          <img src="/images/icon-moon.svg" alt="moon" />
         </div>
       </Header>
       <Search>
-        <input type="text" placeholder="search word" />
+        <input type="text" placeholder="search word" onChange={handleInput} />
         <button>
-          <img src="/images/icon-search.svg" alt="" />
+          <img src="/images/icon-search.svg" alt="search" />
         </button>
       </Search>
       <Main>
         <ListenMode>
           <div className="word">
-            <h1>word</h1>
-            <span>/"k:bc:d/</span>
+            <h1>{dictionaryData[0]?.word}</h1>
+            <span>{dictionaryData[0]?.phonetic}</span>
           </div>
           <button className="iconPlay">
-            <img src="/images/icon-play.svg" alt="" />
+            <img src="/images/icon-play.svg" alt="play" />
           </button>
         </ListenMode>
         <Meaning>
           <div className="noun">
-            <h1>noun</h1>
+            <div className="header">
+              <h1>noun</h1>
+              <HLine />
+            </div>
+
             <h2>Meaning</h2>
             <h3>Synonyms</h3>
           </div>
           <div className="verb">
-            <h1>verb</h1>
+            <div className="header">
+              <h1>verb </h1>
+              <HLine />
+            </div>
             <h2>Meaning</h2>
           </div>
+          <HLine />
+          <SourceLink>
+            Source
+            <a href={dictionaryData[0]?.sourceUrls[0]}>
+              {dictionaryData[0]?.sourceUrls[0]}
+              
+              <img src="/images/icon-new-window.svg" alt="new window" />
+            </a>
+          </SourceLink>
         </Meaning>
       </Main>
     </Container>
@@ -91,6 +142,8 @@ const Search = styled.div`
     padding: 1.8rem;
     border-top-left-radius: 1.5rem;
     border-bottom-left-radius: 1.5rem;
+    border: none;
+    outline: none;
   }
 
   button {
@@ -105,6 +158,7 @@ const Main = styled.div``;
 const ListenMode = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 5rem;
 
   h1 {
     font-size: 7rem;
@@ -120,6 +174,45 @@ const ListenMode = styled.div`
   }
 `;
 
-const Meaning = styled.div``;
+const HLine = styled.div`
+  height: 0.1rem;
+  width: 100%;
+  background-color: #d4c9c937;
+`;
+
+const Meaning = styled.div`
+  h1,
+  h2,
+  h3 {
+    font-size: 1.6rem;
+    color: #0000002b;
+  }
+
+  h1 {
+    color: black;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin: 3rem auto;
+  }
+`;
+
+const SourceLink = styled.div`
+  font-size: 1.2rem;
+  color: #0000002b;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+
+  a {
+    color: black;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+`;
 
 export default App;
