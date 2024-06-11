@@ -1,18 +1,36 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+interface Definition {
+  definition: string;
+  synonyms: string[];
+}
+
+interface Meaning {
+  partOfSpeech: string;
+  definitions: Definition[];
+  synonyms: string[];
+}
+
+interface DictionaryEntry {
+  word: string;
+  phonetic: string;
+  sourceUrls: string[];
+  meanings: Meaning[];
+}
+
 function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [dictionaryData, setDictionaryData] = useState<any[]>([
+  const [dictionaryData, setDictionaryData] = useState<DictionaryEntry[]>([
     {
       word: "Dictionary",
-      phonetic: "",
+      phonetic: "/ˈdɪkʃəˌnɛɹi/",
       sourceUrls: [""],
-      meanings: ""
-    }
+      meanings: [],
+    },
   ]);
 
-  const handleInput = function (event: React.ChangeEvent<HTMLInputElement>) {
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
 
@@ -22,7 +40,7 @@ function App() {
         const respo = await fetch(
           `https://api.dictionaryapi.dev/api/v2/entries/en/${searchQuery}`
         );
-        const data = await respo.json();
+        const data: DictionaryEntry[] = await respo.json();
 
         if (!respo.ok) throw new Error("something went wrong");
 
@@ -36,7 +54,6 @@ function App() {
       fetchData();
     }
   }, [searchQuery]);
-  console.log(dictionaryData)
 
   return (
     <Container>
@@ -66,28 +83,35 @@ function App() {
           </button>
         </ListenMode>
         <Meaning>
-          <div className="noun">
-            <div className="header">
-              <h1>noun</h1>
-              <HLine />
+          {dictionaryData[0]?.meanings.map((meaning, index) => (
+            <div key={index} className={meaning.partOfSpeech}>
+              <div className="header">
+                <h1>{meaning.partOfSpeech}</h1>
+                <HLine />
+              </div>
+              <h2>Meaning</h2>
+              <ul>
+                {meaning.definitions.map((definition, defIndex) => (
+                  <li key={defIndex}>{definition.definition}</li>
+                ))}
+              </ul>
+              {meaning.synonyms.length > 0 && (
+                <>
+                  <h3>Synonyms</h3>
+                  <ul>
+                    {meaning.synonyms.map((synonym, synIndex) => (
+                      <li key={synIndex}>{synonym}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
             </div>
-
-            <h2>Meaning</h2>
-            <h3>Synonyms</h3>
-          </div>
-          <div className="verb">
-            <div className="header">
-              <h1>verb </h1>
-              <HLine />
-            </div>
-            <h2>Meaning</h2>
-          </div>
+          ))}
           <HLine />
           <SourceLink>
             Source
             <a href={dictionaryData[0]?.sourceUrls[0]}>
               {dictionaryData[0]?.sourceUrls[0]}
-              
               <img src="/images/icon-new-window.svg" alt="new window" />
             </a>
           </SourceLink>
@@ -197,6 +221,16 @@ const Meaning = styled.div`
     align-items: center;
     gap: 2rem;
     margin: 3rem auto;
+  }
+
+  ul {
+    list-style-type: none;
+    padding-left: 2rem;
+  }
+
+  li {
+    font-size: 1.6rem;
+    padding: 1rem 0;
   }
 `;
 
