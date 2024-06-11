@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 interface Definition {
   definition: string;
+  example?: string;
   synonyms: string[];
 }
 
@@ -55,6 +56,16 @@ function App() {
     }
   }, [searchQuery]);
 
+  console.log(dictionaryData[0]?.["meanings"]);
+
+  const nounMeanings = dictionaryData[0]?.meanings.filter(
+    (meaning) => meaning.partOfSpeech === "noun"
+  );
+
+  const verbMeanings = dictionaryData[0]?.meanings.filter(
+    (meaning) => meaning.partOfSpeech === "verb"
+  );
+
   return (
     <Container>
       <Header>
@@ -83,7 +94,7 @@ function App() {
           </button>
         </ListenMode>
         <Meaning>
-          {dictionaryData[0]?.meanings.map((meaning, index) => (
+          {nounMeanings.map((meaning, index) => (
             <div key={index} className={meaning.partOfSpeech}>
               <div className="header">
                 <h1>{meaning.partOfSpeech}</h1>
@@ -96,14 +107,41 @@ function App() {
                 ))}
               </ul>
               {meaning.synonyms.length > 0 && (
-                <>
+                <Synonyms>
                   <h3>Synonyms</h3>
                   <p>
                     {meaning.synonyms.map((synonym, synIndex) => (
                       <span key={synIndex}>{synonym}</span>
                     ))}
                   </p>
-                </>
+                </Synonyms>
+              )}
+            </div>
+          ))}
+          {verbMeanings.map((meaning, index) => (
+            <div key={index} className={meaning.partOfSpeech}>
+              <div className="header">
+                <h1>{meaning.partOfSpeech}</h1>
+                <HLine />
+              </div>
+              <h2>Meaning</h2>
+              <ul>
+                {meaning.definitions.map((definition, defIndex) => (
+                  <li key={defIndex}>{definition.definition}</li>
+                ))}
+                <p className="example">
+                  "{dictionaryData[0]?.["meanings"][1].definitions[0].example}"
+                </p>
+              </ul>
+              {meaning.synonyms.length > 0 && (
+                <Synonyms>
+                  <h3>Synonyms</h3>
+                  <p>
+                    {meaning.synonyms.map((synonym, synIndex) => (
+                      <span key={synIndex}>{synonym}</span>
+                    ))}
+                  </p>
+                </Synonyms>
               )}
             </div>
           ))}
@@ -210,6 +248,7 @@ const Meaning = styled.div`
   h3 {
     font-size: 1.6rem;
     color: #0000002b;
+    margin-bottom: 1rem;
   }
 
   h1 {
@@ -220,7 +259,7 @@ const Meaning = styled.div`
     display: flex;
     align-items: center;
     gap: 2rem;
-    margin: 3rem auto;
+    margin: 2rem auto;
   }
 
   ul {
@@ -229,9 +268,32 @@ const Meaning = styled.div`
   }
 
   li {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     padding: 1rem 0;
     list-style-type: disc;
+  }
+
+  .example {
+    font-size: 1.4rem;
+    color: #0000002b;
+    margin-bottom: 2rem;
+  }
+`;
+
+const Synonyms = styled.div`
+  margin-top: 2rem;
+  display: flex;
+  gap: 2rem;
+  p {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  span {
+    color: #a445ed;
+    font-size: 1.4rem;
+    font-weight: bold;
   }
 `;
 
