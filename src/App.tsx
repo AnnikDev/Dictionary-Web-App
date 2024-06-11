@@ -98,11 +98,11 @@ function App() {
               {meaning.synonyms.length > 0 && (
                 <>
                   <h3>Synonyms</h3>
-                  <ul>
+                  <p>
                     {meaning.synonyms.map((synonym, synIndex) => (
-                      <li key={synIndex}>{synonym}</li>
+                      <span key={synIndex}>{synonym}</span>
                     ))}
-                  </ul>
+                  </p>
                 </>
               )}
             </div>
@@ -231,6 +231,7 @@ const Meaning = styled.div`
   li {
     font-size: 1.6rem;
     padding: 1rem 0;
+    list-style-type: disc;
   }
 `;
 
