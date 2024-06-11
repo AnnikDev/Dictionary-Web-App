@@ -130,7 +130,7 @@ function App() {
                   <li key={defIndex}>{definition.definition}</li>
                 ))}
                 <p className="example">
-                  "{dictionaryData[0]?.["meanings"][1].definitions[0].example}"
+                  {dictionaryData[0]?.["meanings"][1].definitions[0].example}
                 </p>
               </ul>
               {meaning.synonyms.length > 0 && (
@@ -271,6 +271,9 @@ const Meaning = styled.div`
     font-size: 1.4rem;
     padding: 1rem 0;
     list-style-type: disc;
+    &::marker {
+      color: #a445ed;
+    }
   }
 
   .example {
@@ -303,6 +306,7 @@ const SourceLink = styled.div`
   display: flex;
   gap: 2rem;
   align-items: center;
+  margin: 2rem auto;
 
   a {
     color: black;
