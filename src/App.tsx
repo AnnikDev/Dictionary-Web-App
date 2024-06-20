@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
 interface Definition {
   definition: string;
@@ -69,7 +69,8 @@ function App() {
   );
 
   return (
-    <Container>
+    <Container isChecked={isChecked}>
+      <GlobalStyle darkMode={isChecked} />
       <Header>
         <img src="/images/logo.svg" alt="logo" />
         <div className="rightHeader">
@@ -82,7 +83,6 @@ function App() {
               checked={isChecked}
               onChange={() => setIsChecked(!isChecked)}
             />
-
             <span className="slider round"></span>
           </Switch>
           <svg
@@ -102,95 +102,97 @@ function App() {
           </svg>
         </div>
       </Header>
-      <Search>
+      <Search isChecked={isChecked}>
         <input type="text" placeholder="search word" onChange={handleInput} />
         <button>
           <img src="/images/icon-search.svg" alt="search" />
         </button>
       </Search>
-      <Main>
-        <ListenMode>
-          <div className="word">
-            <h1>{dictionaryData[0]?.word}</h1>
-            <span>{dictionaryData[0]?.phonetic}</span>
-          </div>
-          <button className="iconPlay">
-            <img src="/images/icon-play.svg" alt="play" />
-          </button>
-        </ListenMode>
-        <Meaning>
-          {nounMeanings.map((meaning, index) => (
-            <div key={index} className={meaning.partOfSpeech}>
-              <div className="header">
-                <h1>{meaning.partOfSpeech}</h1>
-                <HLine />
-              </div>
-              <h2>Meaning</h2>
-              <ul>
-                {meaning.definitions.map((definition, defIndex) => (
-                  <li key={defIndex}>{definition.definition}</li>
-                ))}
-              </ul>
-              {meaning.synonyms.length > 0 && (
-                <Synonyms>
-                  <h3>Synonyms</h3>
-                  <p>
-                    {meaning.synonyms.map((synonym, synIndex) => (
-                      <span key={synIndex}>{synonym}</span>
-                    ))}
-                  </p>
-                </Synonyms>
-              )}
+
+      <ListenMode>
+        <div className="word">
+          <h1>{dictionaryData[0]?.word}</h1>
+          <span>{dictionaryData[0]?.phonetic}</span>
+        </div>
+        <button className="iconPlay">
+          <img src="/images/icon-play.svg" alt="play" />
+        </button>
+      </ListenMode>
+      <Meaning isChecked={isChecked}>
+        {nounMeanings.map((meaning, index) => (
+          <div key={index} className={meaning.partOfSpeech}>
+            <div className="header">
+              <h1>{meaning.partOfSpeech}</h1>
+              <HLine />
             </div>
-          ))}
-          {verbMeanings.map((meaning, index) => (
-            <div key={index} className={meaning.partOfSpeech}>
-              <div className="header">
-                <h1>{meaning.partOfSpeech}</h1>
-                <HLine />
-              </div>
-              <h2>Meaning</h2>
-              <ul>
-                {meaning.definitions.map((definition, defIndex) => (
-                  <li key={defIndex}>{definition.definition}</li>
-                ))}
-                <p className="example">
-                  {dictionaryData[0]?.["meanings"][1].definitions[0].example}
+            <h2>Meaning</h2>
+            <ul>
+              {meaning.definitions.map((definition, defIndex) => (
+                <li key={defIndex}>{definition.definition}</li>
+              ))}
+            </ul>
+            {meaning.synonyms.length > 0 && (
+              <Synonyms>
+                <h3>Synonyms</h3>
+                <p>
+                  {meaning.synonyms.map((synonym, synIndex) => (
+                    <span key={synIndex}>{synonym}</span>
+                  ))}
                 </p>
-              </ul>
-              {meaning.synonyms.length > 0 && (
-                <Synonyms>
-                  <h3>Synonyms</h3>
-                  <p>
-                    {meaning.synonyms.map((synonym, synIndex) => (
-                      <span key={synIndex}>{synonym}</span>
-                    ))}
-                  </p>
-                </Synonyms>
-              )}
+              </Synonyms>
+            )}
+          </div>
+        ))}
+        {verbMeanings.map((meaning, index) => (
+          <div key={index} className={meaning.partOfSpeech}>
+            <div className="header">
+              <h1>{meaning.partOfSpeech}</h1>
+              <HLine />
             </div>
-          ))}
-          <HLine />
-          <SourceLink>
-            Source
-            <a href={dictionaryData[0]?.sourceUrls[0]}>
-              {dictionaryData[0]?.sourceUrls[0]}
-              <img src="/images/icon-new-window.svg" alt="new window" />
-            </a>
-          </SourceLink>
-        </Meaning>
-      </Main>
+            <h2>Meaning</h2>
+            <ul>
+              {meaning.definitions.map((definition, defIndex) => (
+                <li key={defIndex}>{definition.definition}</li>
+              ))}
+              <p className="example">
+                {dictionaryData[0]?.meanings[1]?.definitions[0]?.example}
+              </p>
+            </ul>
+            {meaning.synonyms.length > 0 && (
+              <Synonyms>
+                <h3>Synonyms</h3>
+                <p>
+                  {meaning.synonyms.map((synonym, synIndex) => (
+                    <span key={synIndex}>{synonym}</span>
+                  ))}
+                </p>
+              </Synonyms>
+            )}
+          </div>
+        ))}
+        <HLine />
+        <SourceLink isChecked={isChecked}>
+          Source
+          <a href={dictionaryData[0]?.sourceUrls[0]}>
+            {dictionaryData[0]?.sourceUrls[0]}
+            <img src="/images/icon-new-window.svg" alt="new window" />
+          </a>
+        </SourceLink>
+      </Meaning>
     </Container>
   );
 }
 
-const Container = styled.div`
+const Container = styled.div<{ isChecked: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
   max-width: 100rem;
-  margin: auto;
+  margin: 5rem auto;
   gap: 2rem;
+  background-color: ${(props) => (props.isChecked ? "#1c1c1c" : "#ffffff")};
+  color: ${(props) => (props.isChecked ? "#ffffff" : "#000000")};
+  transition: background-color 0.4s, color 0.4s;
 `;
 
 const Header = styled.div`
@@ -284,7 +286,7 @@ const Switch = styled.label`
   }
 `;
 
-const Search = styled.div`
+const Search = styled.div<{ isChecked: boolean }>`
   display: flex;
 
   input {
@@ -292,23 +294,19 @@ const Search = styled.div`
     background-color: #00000011;
     height: 4rem;
     font-size: 1.4rem;
-    color: black;
+    color: ${(props) => (props.isChecked ? "#ffffff" : "#0000000")};
     font-weight: 600;
     padding: 1.8rem;
-    border-top-left-radius: 1.5rem;
-    border-bottom-left-radius: 1.5rem;
+    border-radius: 1rem;
     border: none;
     outline: none;
   }
 
   button {
-    padding-right: 1.8rem;
-    border-top-right-radius: 30%;
-    border-bottom-right-radius: 30%;
+    transform: translateX(-30px);
+    background-color: inherit;
   }
 `;
-
-const Main = styled.div``;
 
 const ListenMode = styled.div`
   display: flex;
@@ -335,17 +333,17 @@ const HLine = styled.div`
   background-color: #d4c9c937;
 `;
 
-const Meaning = styled.div`
+const Meaning = styled.div<{ isChecked: boolean }>`
   h1,
   h2,
   h3 {
     font-size: 1.6rem;
-    color: #0000002b;
+    color: ${(props) => (props.isChecked ? "#fffbfb52" : "#0000004e")};
     margin-bottom: 1rem;
   }
 
   h1 {
-    color: black;
+    color: ${(props) => (props.isChecked ? "#fffbfb" : "#000000")};
   }
 
   .header {
@@ -393,19 +391,27 @@ const Synonyms = styled.div`
   }
 `;
 
-const SourceLink = styled.div`
+const SourceLink = styled.div<{ isChecked: boolean }>`
   font-size: 1.2rem;
-  color: #0000002b;
+  color: ${(props) => (props.isChecked ? "#ffffff6b" : "#0000004e")};
   display: flex;
   gap: 2rem;
   align-items: center;
   margin: 2rem auto;
 
   a {
-    color: black;
+    color: ${(props) => (props.isChecked ? "#ffffffb8" : "#000000cb")};
     display: flex;
     align-items: center;
     gap: 1rem;
+  }
+`;
+
+const GlobalStyle = createGlobalStyle<{ darkMode: boolean }>`
+  body {
+    background-color: ${(props) => (props.darkMode ? "#1c1c1c" : "#ffffff")};
+    color: ${(props) => (props.darkMode ? "#ffffff" : "#000000")};
+    transition: background-color 0.4s, color 0.4s;
   }
 `;
 
