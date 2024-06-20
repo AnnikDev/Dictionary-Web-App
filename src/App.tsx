@@ -371,7 +371,7 @@ const ListenMode = styled.div`
       font-size: 3rem;
     }
 
-    .iconPlay img{
+    .iconPlay img {
       width: 4.5rem;
     }
   }
