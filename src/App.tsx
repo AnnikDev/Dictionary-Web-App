@@ -188,7 +188,8 @@ const Container = styled.div<{ isChecked: boolean }>`
   flex-direction: column;
   justify-content: center;
   max-width: 100rem;
-  margin: 5rem auto;
+  margin: auto;
+  padding: 2rem;
   gap: 2rem;
   background-color: ${(props) => (props.isChecked ? "#1c1c1c" : "#ffffff")};
   color: ${(props) => (props.isChecked ? "#ffffff" : "#000000")};
@@ -225,13 +226,25 @@ const Header = styled.div`
   .moon.checked {
     stroke: #a445ed;
   }
+
+  @media screen and (max-width: 500px) {
+    height: 3rem;
+
+    .rightHeader {
+      gap: 1rem;
+
+      .fonts {
+        font-size: 1.2rem;
+      }
+    }
+  }
 `;
 
 const Switch = styled.label`
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 6rem;
+  height: 3.4rem;
 
   input {
     opacity: 0;
@@ -254,10 +267,10 @@ const Switch = styled.label`
   .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
+    height: 2.6rem;
+    width: 2.6rem;
+    left: 0.4rem;
+    bottom: 0.4rem;
     background-color: white;
     -webkit-transition: 0.4s;
     transition: 0.4s;
@@ -278,11 +291,23 @@ const Switch = styled.label`
   }
 
   .slider.round {
-    border-radius: 34px;
+    border-radius: 3.4rem;
   }
 
   .slider.round:before {
     border-radius: 50%;
+  }
+
+  @media screen and (max-width: 500px) {
+    width: 5rem;
+    height: 2.4rem;
+
+    .slider:before {
+      height: 2rem;
+      width: 2rem;
+      left: 0.2rem;
+      bottom: 0.2rem;
+    }
   }
 `;
 
@@ -325,6 +350,31 @@ const ListenMode = styled.div`
   .iconPlay {
     background-color: inherit;
   }
+
+  @media screen and (max-width: 800px) {
+    margin-bottom: 1rem;
+    h1 {
+      font-size: 4rem;
+    }
+
+    span {
+      font-size: 1rem;
+    }
+
+    .iconPlay img {
+      width: 6rem;
+    }
+  }
+
+  @media screen and (max-width: 375px) {
+    h1 {
+      font-size: 3rem;
+    }
+
+    .iconPlay img{
+      width: 4.5rem;
+    }
+  }
 `;
 
 const HLine = styled.div`
@@ -339,7 +389,6 @@ const Meaning = styled.div<{ isChecked: boolean }>`
   h3 {
     font-size: 1.6rem;
     color: ${(props) => (props.isChecked ? "#fffbfb52" : "#0000004e")};
-    margin-bottom: 1rem;
   }
 
   h1 {
@@ -356,6 +405,7 @@ const Meaning = styled.div<{ isChecked: boolean }>`
   ul {
     list-style-type: none;
     padding-left: 2rem;
+    margin-top: 2rem;
   }
 
   li {
@@ -372,11 +422,24 @@ const Meaning = styled.div<{ isChecked: boolean }>`
     color: #0000002b;
     margin-bottom: 2rem;
   }
+
+  @media screen and (max-width: 500px) {
+    h1,
+    h2,
+    h3 {
+      font-size: 1.4rem;
+    }
+
+    li {
+      font-size: 1.2rem;
+    }
+  }
 `;
 
 const Synonyms = styled.div`
   margin-top: 2rem;
   display: flex;
+  align-items: center;
   gap: 2rem;
   p {
     display: flex;
@@ -388,6 +451,12 @@ const Synonyms = styled.div`
     color: #a445ed;
     font-size: 1.4rem;
     font-weight: bold;
+  }
+
+  @media screen and (max-width: 500px) {
+    span {
+      font-size: 1.2rem;
+    }
   }
 `;
 
