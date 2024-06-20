@@ -31,6 +31,8 @@ function App() {
     },
   ]);
 
+  const [isChecked, setIsChecked] = useState(false);
+
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
@@ -75,10 +77,29 @@ function App() {
           <img src="/images/icon-arrow-down.svg" alt="arrow" />
           <div className="line"></div>
           <Switch>
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={() => setIsChecked(!isChecked)}
+            />
+
             <span className="slider round"></span>
           </Switch>
-          <img src="/images/icon-moon.svg" alt="moon" />
+          <svg
+            className={`moon ${isChecked ? "checked" : ""}`}
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 22 22"
+          >
+            <path
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.5"
+              d="M1 10.449a10.544 10.544 0 0 0 19.993 4.686C11.544 15.135 6.858 10.448 6.858 1A10.545 10.545 0 0 0 1 10.449Z"
+            />
+          </svg>
         </div>
       </Header>
       <Search>
@@ -193,24 +214,29 @@ const Header = styled.div`
     width: 0.1rem;
     background-color: #0000002b;
   }
+
+  .moon {
+    stroke: #838383;
+    transition: stroke 0.4s;
+  }
+
+  .moon.checked {
+    stroke: #a445ed;
+  }
 `;
 
 const Switch = styled.label`
-  /* The switch - the box around the slider */
-
   position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
 
-  /* Hide default HTML checkbox */
   input {
     opacity: 0;
     width: 0;
     height: 0;
   }
 
-  /* The slider */
   .slider {
     position: absolute;
     cursor: pointer;
@@ -236,11 +262,11 @@ const Switch = styled.label`
   }
 
   input:checked + .slider {
-    background-color: #2196f3;
+    background-color: #a445ed;
   }
 
   input:focus + .slider {
-    box-shadow: 0 0 1px #2196f3;
+    box-shadow: 0 0 1px #a445ed;
   }
 
   input:checked + .slider:before {
@@ -249,7 +275,6 @@ const Switch = styled.label`
     transform: translateX(26px);
   }
 
-  /* Rounded sliders */
   .slider.round {
     border-radius: 34px;
   }
